@@ -1,6 +1,6 @@
 # SFO Save Editor
 
-SFO Editor is a Python script for Terminal/CMD that adds a GUI to automate the use of commands from the SFO tool written in C by [Hippie68](https://github.com/hippie68/sfo) for PlayStation 4. It also includes some extra features.
+SFO Editor is a Python script for Terminal/CMD that adds a UI to automate the use of commands from the SFO tool written in C by [Hippie68](https://github.com/hippie68/sfo) for PlayStation 4. It also includes some extra features.
 
 ## Notes
 
@@ -10,13 +10,14 @@ SFO Editor is a Python script for Terminal/CMD that adds a GUI to automate the u
 - If you want to manually change the default language, you need to edit the `saves_language` parameter in `translations.json`, which stores the translations.
 - To see emojis correctly, you need a terminal compatible with UTF-8 Unicode.
 
-## Requirements
+## Building
 
-To run the script, you need to have the following installed:
+To build the script, you need to have the following installed:
 
 - Python 3 & pip
 - Requests
 - Colorama
+- Pyinstaller
 
 ### Install the dependencies
 
@@ -31,13 +32,27 @@ Python for Linux
 sudo apt install python3 && sudo apt install pip -y
 ```
 
-Once the above is installed, run:
-
-### Colorama & Requests
+### Colorama, Requests & PyInstaller
 
 ```bash
-pip install colorama && pip install requests
+pip install colorama && pip install requests && pip install pyinstaller
 ```
+### Build Python Script
+
+First, go to the folder (example 64 bits):
+
+```bash
+cd x64
+```
+
+Now, run this command to build SFO Editor:
+
+```bash
+pyinstaller --onefile sfo_editor_x64.py
+```
+
+> [!NOTE]  
+> You can download the Script already compiled and ready to use from [releases](https://github.com/thezodiacox0/sfo-editor/releases)
 
 ## Features
 

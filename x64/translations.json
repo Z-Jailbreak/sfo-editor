@@ -120,6 +120,5 @@
         "exit": "❌ Close Script",
         "config_loaded": "✅ Successfully loaded...",
         "sfo_config_selected": "Selected"
-    },
-    "saved_language": "es"
+    }
 }

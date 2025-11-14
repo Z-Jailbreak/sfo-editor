@@ -1,0 +1,110 @@
+name: Build Python Script
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            arch: x64
+            folder: x64
+            exe_name: sfo_editor_x64
+            bin_linux: sfo
+            bin_windows: sfo.exe
+          - os: ubuntu-22.04
+            arch: x86
+            folder: x86
+            exe_name: sfo_editor_x86
+            bin_linux: sfo_32
+            bin_windows: sfo_32.exe
+          - os: windows-latest
+            arch: x64
+            folder: x64
+            exe_name: sfo_editor_x64
+            bin_linux: sfo
+            bin_windows: sfo.exe
+          - os: windows-latest
+            arch: x86
+            folder: x86
+            exe_name: sfo_editor_x86
+            bin_linux: sfo_32
+            bin_windows: sfo_32.exe
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: pip install pyinstaller colorama requests
+
+      - name: Build Script (Linux)
+        if: matrix.os == 'ubuntu-22.04'
+        run: |
+          pyinstaller --onefile ${{ matrix.folder }}/${{ matrix.exe_name }}.py --distpath dist/linux/${{ matrix.arch }}
+          ls -l dist/linux/${{ matrix.arch }}
+
+      - name: Build Script (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          pyinstaller --onefile ${{ matrix.folder }}/${{ matrix.exe_name }}.py --distpath dist/windows/${{ matrix.arch }}
+          dir dist\windows\${{ matrix.arch }}
+
+      - name: Make 7z (Linux)
+        if: matrix.os == 'ubuntu-22.04'
+        run: |
+          mkdir package
+          cp dist/linux/${{ matrix.arch }}/${{ matrix.exe_name }} package/
+          cp ${{ matrix.folder }}/translations.json package/
+          cp -r ${{ matrix.folder }}/config package/
+          cp ${{ matrix.folder }}/${{ matrix.bin_linux }} package/
+          cp ${{ matrix.folder }}/${{ matrix.bin_windows }} package/
+          7z a ${{ matrix.os }}-${{ matrix.arch }}.7z ./package/*
+
+      - name: Make 7z (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          mkdir package
+          Copy-Item "dist/windows/${{ matrix.arch }}/${{ matrix.exe_name }}.exe" -Destination "package/"
+          Copy-Item "${{ matrix.folder }}/translations.json" -Destination "package/"
+          Copy-Item "${{ matrix.folder }}/config" -Destination "package/" -Recurse
+          Copy-Item "${{ matrix.folder }}/${{ matrix.bin_linux }}" -Destination "package/"
+          Copy-Item "${{ matrix.folder }}/${{ matrix.bin_windows }}" -Destination "package/"
+          7z a ${{ matrix.os }}-${{ matrix.arch }}.7z ./package/*
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-${{ matrix.arch }}
+          path: ${{ matrix.os }}-${{ matrix.arch }}.7z
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create 1.0${{ github.run_number }} ./artifacts/**/*.7z \
+            --target ${{ github.sha }} \
+            -t "SFO Editor 1.0${{ github.run_number }}" \
+            -n "Python Script from GitHub Actions"
