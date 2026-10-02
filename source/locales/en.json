@@ -1,0 +1,80 @@
+{
+  "common": {
+    "back_to_main": "Back to main menu"
+  },
+
+  "main_menu": {
+    "title": "SFO Save Editor By TheZodiacoX",
+    "modify_sfo": "Modify SFO",
+    "configs": "Configurations",
+    "help": "Questions / Help",
+    "settings": "Settings",
+    "exit": "Exit"
+  },
+
+  "help_menu": {
+    "help_title": "Questions & Help",
+    "help_empty": "No help documents found."
+  },
+
+  "modify_sfo": {
+    "sfo_title": "Modify SFO",
+    "sfo_select": "Select param.sfo",
+    "sfo_no_file": "No file selected",
+    "sfo_need_file": "Select a param.sfo",
+    "sfo_label_title": "Title",
+    "sfo_label_desc": "Description",
+    "sfo_apply": "Apply",
+    "sfo_empty": "Modify at least one value",
+    "sfo_success": "Successfully modified",
+    "sfo_error": "The SFO file could not be modified (command_sfo_error)",
+    "sfo_info_title": "Saved game",
+    "sfo_info_title_id": "TITLE_ID",
+    "sfo_info_name": "Title (Maintitle)",
+    "sfo_info_description": "Description (Subtitle)",
+    "sfo_info_none": "—",
+    "sfo_info_no_image": "icon0.png not detected"
+  },
+
+  "settings_menu": {
+    "settings_title": "Settings",
+    "opt_language": "Default Language",
+    "opt_language_desc": "Change the main language",
+    "sub_language_en": "English",
+    "sub_language_en_desc": "Set English as the default language",
+    "sub_language_es": "Español",
+    "sub_language_es_desc": "Set Spanish as the default language",
+    "opt_backup": "PARAM.SFO Backup",
+    "opt_backup_desc": "param.sfo backups before being modified",
+    "backup_modify_sfo_title": "Enable Backup in Modify SFO",
+    "backup_config_title": "Enable Backup in Configurations"
+  },
+
+  "configs_menu": {
+    "configs_title": "Configurations",
+    "configs_static": "Manage Configurations",
+    "configs_empty": "No configurations available",
+    "configs_loaded": "Configuration loaded successfully",
+    "configs_error": "The configuration could not be loaded",
+    "configs_select_sfo": "Select the param.sfo file",
+    "configs_back": "Back",
+    "configs_create": "New configuration",
+    "configs_create_btn": "Create",
+    "configs_cancel": "Cancel",
+    "configs_save": "Save changes",
+    "configs_delete": "Delete",
+    "configs_confirm_delete": "Are you sure you want to delete this configuration?",
+    "configs_name_required": "Enter a name for the configuration",
+    "configs_required": "Name, Maintitle and Subtitle are required",
+    "configs_name": "Name",
+    "configs_desc": "Description",
+    "configs_icon": "Icon",
+    "configs_icon_color": "Icon color",
+    "configs_icon_search": "Search icon",
+    "configs_author": "Author",
+    "configs_maintitle": "Maintitle",
+    "configs_subtitle": "Subtitle",
+    "configs_version": "Version",
+    "configs_notes": "Notes"
+  }
+}

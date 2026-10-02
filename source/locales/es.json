@@ -1,0 +1,80 @@
+{
+  "common": {
+    "back_to_main": "Volver al menú principal"
+  },
+
+  "main_menu": {
+    "title": "SFO Save Editor By TheZodiacoX",
+    "modify_sfo": "Modificar SFO",
+    "configs": "Configuraciones",
+    "help": "Preguntas / Ayuda",
+    "settings": "Ajustes",
+    "exit": "Cerrar aplicacion"
+  },
+
+  "help_menu": {
+    "help_title": "Preguntas y Ayuda",
+    "help_empty": "No se encontraron documentos de ayuda."
+  },
+
+  "modify_sfo": {
+    "sfo_title": "Modificar SFO",
+    "sfo_select": "Seleccionar param.sfo",
+    "sfo_no_file": "Ningún archivo seleccionado",
+    "sfo_need_file": "Selecciona un param.sfo",
+    "sfo_label_title": "Título",
+    "sfo_label_desc": "Descripción",
+    "sfo_apply": "Aplicar",
+    "sfo_empty": "Modifica al menos un valor",
+    "sfo_success": "Se ha modificado correctamente",
+    "sfo_error": "No se pudo modificar el archivo SFO (command_sfo_error)",
+    "sfo_info_title": "Partida Guardada",
+    "sfo_info_title_id": "TITLE_ID",
+    "sfo_info_name": "Título (Maintitle)",
+    "sfo_info_description": "Descripción (Subtitle)",
+    "sfo_info_none": "—",
+    "sfo_info_no_image": "No se ha detectado icon0.png"
+  },
+
+  "settings_menu": {
+    "settings_title": "Ajustes",
+    "opt_language": "Idioma Predeterminado",
+    "opt_language_desc": "Cambiar el idioma principal",
+    "sub_language_en": "English",
+    "sub_language_en_desc": "Establecer el inglés como idioma predeterminado",
+    "sub_language_es": "Español",
+    "sub_language_es_desc": "Establecer el español como idioma predeterminado",
+    "opt_backup": "Copia de Seguridad PARAM.SFO",
+    "opt_backup_desc": "Copias de seguridad de param.sfo antes de ser modificado",
+    "backup_modify_sfo_title": "Activar Copia de Seguridad en Modificar SFO",
+    "backup_config_title": "Activar Copia de Seguridad en Configuraciones"
+  },
+
+  "configs_menu": {
+    "configs_title": "Configuraciones",
+    "configs_static": "Gestionar Configuraciones",
+    "configs_empty": "No hay configuraciones disponibles",
+    "configs_loaded": "Configuración cargada correctamente",
+    "configs_error": "No se pudo cargar la configuración",
+    "configs_select_sfo": "Selecciona el archivo param.sfo",
+    "configs_back": "Volver",
+    "configs_create": "Crear configuración",
+    "configs_create_btn": "Crear",
+    "configs_cancel": "Cancelar",
+    "configs_save": "Guardar cambios",
+    "configs_delete": "Eliminar",
+    "configs_confirm_delete": "¿Seguro que quieres eliminar esta configuración?",
+    "configs_name_required": "Escribe un nombre para la configuración",
+    "configs_required": "Nombre, Maintitle y Subtitle son obligatorios",
+    "configs_name": "Nombre",
+    "configs_desc": "Descripción",
+    "configs_icon": "Icono",
+    "configs_icon_color": "Color del icono",
+    "configs_icon_search": "Buscar icono",
+    "configs_author": "Autor",
+    "configs_maintitle": "Maintitle",
+    "configs_subtitle": "Subtitle",
+    "configs_version": "Versión",
+    "configs_notes": "Notas"
+  }
+}

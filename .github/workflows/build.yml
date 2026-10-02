@@ -1,91 +1,78 @@
-name: Build Python Script
+name: Build SFO Editor
 
 on:
   push:
     branches:
       - main
   workflow_dispatch:
-  
+
 permissions:
   contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
+            platform: ubuntu
             arch: x64
-            folder: x64
-            exe_name: sfo_editor_x64
-            bin_linux: sfo
-            bin_windows: sfo.exe
-          - os: ubuntu-22.04
-            arch: x86
-            folder: x86
-            exe_name: sfo_editor_x86
-            bin_linux: sfo_32
-            bin_windows: sfo_32.exe
+            name-build: SFOEditor-Ubuntu
+            exe: SFOEditor-Ubuntu
+            sep: ":"
           - os: windows-latest
+            platform: windows
             arch: x64
-            folder: x64
-            exe_name: sfo_editor_x64
-            bin_linux: sfo
-            bin_windows: sfo.exe
-          - os: windows-latest
-            arch: x86
-            folder: x86
-            exe_name: sfo_editor_x86
-            bin_linux: sfo_32
-            bin_windows: sfo_32.exe
+            name-build: SFOEditor-Windows
+            exe: SFOEditor-Windows.exe
+            sep: ";"
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
       - name: Install dependencies
-        run: pip install pyinstaller colorama requests
-
-      - name: Build Script (Linux)
-        if: matrix.os == 'ubuntu-22.04'
         run: |
-          pyinstaller --onefile ${{ matrix.folder }}/${{ matrix.exe_name }}.py --distpath dist/linux/${{ matrix.arch }}
-          ls -l dist/linux/${{ matrix.arch }}
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Build Script (Windows)
-        if: matrix.os == 'windows-latest'
+      - name: Build executable
+        shell: bash
         run: |
-          pyinstaller --onefile ${{ matrix.folder }}/${{ matrix.exe_name }}.py --distpath dist/windows/${{ matrix.arch }}
-          dir dist\windows\${{ matrix.arch }}
+          pyinstaller --onefile --windowed --name "${{ matrix.name-build }}" \
+            --icon "source/icon_sfoeditor.ico" \
+            --add-data "source/icon_sfoeditor.ico${{ matrix.sep }}." \
+            --paths source \
+            --add-data "source/locales${{ matrix.sep }}locales" \
+            --add-data "source/help${{ matrix.sep }}help" \
+            --add-binary "source/sfo_app${{ matrix.sep }}sfo_app" \
+            source/main.py
 
-      - name: Make 7z (Linux)
-        if: matrix.os == 'ubuntu-22.04'
-        run: |
-          mkdir package
-          cp dist/linux/${{ matrix.arch }}/${{ matrix.exe_name }} package/
-          cp ${{ matrix.folder }}/translations.json package/
-          cp -r ${{ matrix.folder }}/config package/
-          cp ${{ matrix.folder }}/${{ matrix.bin_linux }} package/
-          cp ${{ matrix.folder }}/${{ matrix.bin_windows }} package/
-          7z a ${{ matrix.os }}-${{ matrix.arch }}.7z ./package/*
-
-      - name: Make 7z (Windows)
-        if: matrix.os == 'windows-latest'
+      - name: Make 7z
+        shell: bash
         run: |
           mkdir package
-          Copy-Item "dist/windows/${{ matrix.arch }}/${{ matrix.exe_name }}.exe" -Destination "package/"
-          Copy-Item "${{ matrix.folder }}/translations.json" -Destination "package/"
-          Copy-Item "${{ matrix.folder }}/config" -Destination "package/" -Recurse
-          Copy-Item "${{ matrix.folder }}/${{ matrix.bin_linux }}" -Destination "package/"
-          Copy-Item "${{ matrix.folder }}/${{ matrix.bin_windows }}" -Destination "package/"
-          7z a ${{ matrix.os }}-${{ matrix.arch }}.7z ./package/*
+          cp "dist/${{ matrix.exe }}" package/
+          7z a "SFOEditor-${{ matrix.platform }}-${{ matrix.arch }}.7z" ./package/*
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}-${{ matrix.arch }}
-          path: ${{ matrix.os }}-${{ matrix.arch }}.7z
+          name: SFOEditor-${{ matrix.platform }}-${{ matrix.arch }}
+          path: SFOEditor-${{ matrix.platform }}-${{ matrix.arch }}.7z
 
   release:
     runs-on: ubuntu-latest
@@ -104,7 +91,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create 1.0${{ github.run_number }} ./artifacts/**/*.7z \
-            --target ${{ github.sha }} \
-            -t "SFO Editor 1.0${{ github.run_number }}" \
-            -n "Python Script from GitHub Actions"
+          gh release create "2.0${{ github.run_number }}" ./artifacts/**/*.7z \
+            --target "${{ github.sha }}" \
+            --title "SFO Editor 2.0.${{ github.run_number }}" \
+            --notes "Build SFO Editor (${{ github.run_number }}) from GitHub Actions"

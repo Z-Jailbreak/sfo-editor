@@ -1,23 +1,30 @@
 # SFO Save Editor
 
-SFO Editor is a Python script for Terminal/CMD that adds a UI to automate the use of commands from the SFO tool written in C by [Hippie68](https://github.com/hippie68/sfo) for PlayStation 4. It also includes some extra features.
+SFO Editor is a Python application that automate the use of commands from the SFO tool written in C by [Hippie68](https://github.com/hippie68/sfo) for PlayStation 4. It also includes some extra features.
 
 ## Notes
 
-- The first time you run the script, it will ask you to choose a language. This will only happen once, and the selected language will be saved as the default.
-- Inside the Settings menu of the script, you can change the default language, create a backup before modifying, and more.
-- This script is intended for editing the `PARAM.SFO` file of PS4 save data.
-- If you want to manually change the default language, you need to edit the `saves_language` parameter in `translations.json`, which stores the translations.
-- To see emojis correctly, you need a terminal compatible with UTF-8 Unicode.
+- The first time you run the application, it will ask you to choose a language. This will only happen once, and the selected language will be saved as the default.
+- Inside the Settings menu of the application, you can change the default language and enable a backup before modifying the save or loading a configuration.
+- This application is intended for editing the `PARAM.SFO` file of PS4 save data.
+- If you want to manually change the default language, edit the `current` value under the `[Language]` from `settings/settings.ini`.
+
+## Features
+
+- Cross-platform (Windows/Linux).
+- Modify SFO parameters (Maintitle & Subtitle).
+- Optional backup of `PARAM.SFO` before modifying it or loading a configuration.
+- Create, edit, delete and load JSON configurations to automate SFO modifications.
+- Only available for x64.
+- FAQ and Troubleshooting section included.
+- Multi-language support (Spanish & English).
 
 ## Building
 
-To build the script, you need to have the following installed:
+To build the application, you need to have the following installed:
 
 - Python 3 & pip
-- Requests
-- Colorama
-- Pyinstaller
+- The dependencies listed in `requirements.txt`
 
 ### Install the dependencies
 
@@ -29,73 +36,76 @@ To build the script, you need to have the following installed:
 Python for Linux
 
 ```bash
-sudo apt install python3 && sudo apt install pip -y
+sudo apt install python3 python3-pip -y
 ```
 
-### Colorama, Requests & PyInstaller
+Install the dependencies:
 
 ```bash
-pip install colorama && pip install requests && pip install pyinstaller
-```
-### Build Python Script
-
-First, go to the folder (example 64 bits):
-
-```bash
-cd x64
+pip install -r requirements.txt
 ```
 
-Now, run this command to build SFO Editor:
+### Build the executable
+
+Linux:
 
 ```bash
-pyinstaller --onefile sfo_editor_x64.py
+pyinstaller --onefile --windowed --name SFOEditor-Ubuntu \
+  --icon source/icon_sfoeditor.ico \
+  --add-data source/icon_sfoeditor.ico:. \
+  --paths source \
+  --add-data source/locales:locales \
+  --add-data source/help:help \
+  --add-binary source/sfo_app:sfo_app \
+  source/main.py
+```
+
+Windows:
+
+```
+pyinstaller --onefile --windowed --name SFOEditor-Windows --icon source/icon_sfoeditor.ico --add-data "source/icon_sfoeditor.ico;." --paths source --add-data "source/locales;locales" --add-data "source/help;help" --add-binary "source/sfo_app;sfo_app" source/main.py
 ```
 
 > [!NOTE]  
-> You can download the Script already compiled and ready to use from [releases](https://github.com/thezodiacox0/sfo-editor/releases)
-
-## Features
-
-- Cross-platform (Windows/Linux).
-- Modify SFO parameters individually or both at once.
-- Create a backup of `PARAM.SFO` before modifying it.
-- Load a predefined JSON configuration to automate SFO modifications.
-- FAQ and Troubleshooting section included.
-- Available for x86 and x64.
-- Online database to download JSON configurations from GitHub.
-- Multi-language support (Spanish & English).
-- Emoji support visible from PS4/PS5.
+> You can download the application already compiled and ready to use from [releases](https://github.com/thezodiacox0/sfo-editor/releases).
 
 ## JSON Configuration
 
-To create a JSON configuration to load or share later, follow these steps:
+You can create and edit configurations from the Configurations menu. 
 
-1. Copy an example file and rename it, for example, `thezodiacox.json`.
+When you create a configuration, you'll be prompted to enter some required parameters, such as `ConfigName`, `Maintitle`, and `Subtitle` and you can add additional parameters to provide more information whenever you want to load them. Here you can see all the parameters:
 
-2. Modify each of its parameters and add more if desired; these will be shown as informational fields in the preview:
+- **ConfigName**: The name shown in the configurations list (e.g., SFO Example).
 
-  - **ConfigName**: This parameter will not be shown in the preview but will appear in the configurations list (e.g., SFO Example).
+- **ConfigDescription**: The description shown under the name in the configurations list (e.g., SFO Description Example).
 
-  - **MainTitle**: This parameter will change the title shown in the save on the PS4/PS5 (e.g., SaveData Example).
+- **ConfigIcon**: The icon shown in the configurations list, a Font Awesome 5 name used by QtAwesome (e.g., `fa5s.rocket`).
 
-  - **SubTitle**: This parameter will display the description, i.e., the "Details" text on the PS4/PS5 (e.g., Savedata Example Extended).
+- **ConfigIconColor**: The color of the icon as a hexadecimal value (e.g., `#ffffff`).
 
-  - **Version**: This parameter is purely informational but serves to indicate that changes have been made (e.g., 1.2b).
+- **Author**: The author of the configuration, shown as information in the list (e.g., TheZodiacoX).
 
-  - **Notes**: This parameter is informational and is used to add notes about the configuration.
+- **Maintitle**: This parameter will change the title shown in the save on the PS4/PS5 (e.g., SaveData Example).
 
-3. Once all parameters have been modified, save the file in the `config` folder. The next time the script runs, it will detect the new configuration.
+- **Subtitle**: This parameter will display the description, i.e., the "Details" text on the PS4/PS5 (e.g., Savedata Example Extended).
+
+- **Version**: This parameter is purely informational but serves to indicate that changes have been made (e.g., 1.2b).
+
+- **Notes**: This parameter is informational and is used to add notes about the configuration.
+
+When you load a configuration, it asks for the `PARAM.SFO` file and writes its `Maintitle` and `Subtitle` into it.
 
 ## PARAM.SFO Backup
 
-When a backup is created, it is renamed to make it easily identifiable:
+Backups are optional. They are disabled by default when you open the app for the first time; if you prefer, you can enable backups in Settings.
+
+When a backup is created, it is stored in the `backup` folder and renamed so that it is easily identifiable:
 
 BACKUP-(Method)(TITLE_ID Numbers)-(Random Identifier)(File Count).sfo
 
-
 - **Method**: Indicates whether parameters were modified individually or using automation (SFO or CONFIG).
 
-- **TITLE_ID Numbers**: For example, GTA V Europe CUSA is `CUSA00411`.
+- **TITLE_ID Numbers**: The digits of the TITLE_ID. For example, GTA V Europe CUSA is `CUSA00411`, so the number is `00411`.
 
 - **Random Identifier**: A 4-digit number randomly generated between 1000 and 9999 used to identify the copy.
 
@@ -103,9 +113,3 @@ BACKUP-(Method)(TITLE_ID Numbers)-(Random Identifier)(File Count).sfo
 
 **Example Individual**: `BACKUP-SFO00411-541300.sfo`  
 **Example Load Configuration**: `BACKUP-CONFIG00411-828500.sfo`
-
-## Online Database from GitHub
-
-SFO Editor can download JSON configurations from a GitHub repository and save them to the existing configurations folder. These are stored as Packs, and you can choose to download some or all of them.
-
-To access the full documentation of the Online Database, click [here](https://github.com/thezodiacox0/sfo-db).

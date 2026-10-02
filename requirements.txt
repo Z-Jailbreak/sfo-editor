@@ -1,0 +1,6 @@
+# --- Runtime ---
+PyQt5>=5.15
+qtawesome>=1.2
+
+# --- Build the executable ---
+pyinstaller>=6.0
